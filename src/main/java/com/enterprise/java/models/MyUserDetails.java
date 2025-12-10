@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Arrays;
 import java.util.Collection;
 
+// user details table
 @Entity
 @Data
 public class MyUserDetails implements UserDetails {
@@ -29,17 +30,17 @@ public class MyUserDetails implements UserDetails {
     private boolean credentialsNonExpired = true;
     private boolean enabled = true;
 
-    @Bean
+    @Bean // Make the encoder
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Override
+    @Override // Encode passwords when getting them
     public String getPassword() {
         return passwordEncoder().encode(password);
     }
 
-    @Override
+    @Override // Roles have to be a GrantedAuthority List
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roles);
         return Arrays.asList(authority);
