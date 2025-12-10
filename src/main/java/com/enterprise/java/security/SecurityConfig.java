@@ -17,17 +17,17 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Bean
+    @Bean // Make the encoder
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
+    @Bean // Get a UserService instance
     public UserDetailsService userDetailsService() {
         return new UserService();
     }
 
-    @Bean
+    @Bean // Set up authentication provider
     public AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
@@ -35,10 +35,11 @@ public class SecurityConfig {
         return providerManager;
     }
 
-    @Bean
+    @Bean // Define security filter configuration
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth -> auth.requestMatchers("/", "/bookReviewScript.js").permitAll() // index is not authenticated
-                        .requestMatchers("/h2-console/**").permitAll().anyRequest().authenticated()) // TODO: remove after migrating to mysql
+        http.authorizeHttpRequests(auth -> auth
+        		.requestMatchers("/addbook").authenticated() // only authenticated users can add books
+                .anyRequest().permitAll()) // other actions can be done by everyone
                 .httpBasic(Customizer.withDefaults()).formLogin(Customizer.withDefaults());
         http.csrf((csrf) -> csrf.disable());
         http.headers((headers) -> headers.frameOptions((frame) -> frame.sameOrigin()));

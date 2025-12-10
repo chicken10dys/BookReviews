@@ -2,18 +2,30 @@
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <title>Index</title>
+    <title>Book reviews</title>
     <script th:src="@{/bookReviewScript.js}"></script>
 </head>
 <body>
+<h1>Book reviews</h1>
+<h2>Group 6 (Ashton Gon, Vadim Titov, Dorian Motieshare)</h2>
+
+<!-- Link to add a book -->
 <a href="/addbook">Add Book</a>
-<ol th:each="book : ${books}" th:object="${book}">
-    <li>
-        <a href="#" th:onclick="'getBook('+${book.id}+')'" th:text="*{title}"></a>
-        <a th:href="@{/addreview/{bookId}(bookId=*{id})}">(Add Review)</a>
+<ol>
+	<!-- Iterate over books -->
+    <li th:each="book : ${books}">
+    
+<!-- If user clicks on a book's name, use js function from the script to load reviews -->
+        <a href="#" th:onclick="'getBook('+${book.id}+')'" th:text="${book.title}"></a>
+        
+<!-- If the user clicks on Add Review, send to add review, tracking the bookId in path-->
+        <a th:href="@{/addreview/{bookId}(bookId=${book.id})}">(Add Review)</a>
     </li>
 </ol>
-<hr/><div th:id="bookdetails"></div>
+<hr/>
+
+<!-- The contents of these elements will be loaded asynchronously by bookReivewSctipt.js -->
+<div th:id="bookdetails"></div>
 <div th:id="reviewdetails"></div>
 </body>
 </html>
